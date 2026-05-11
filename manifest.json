@@ -1,0 +1,41 @@
+{
+    "manifest_version": 3,
+    "name": "adpc-chrome-ext",
+    "description": "Displays consent requests, allows user decisions, and dynamically appends ADPC headers.",
+    "version": "0.1",
+    "permissions": [
+        "declarativeNetRequest",
+        "storage",
+        "activeTab", 
+        "webRequest",
+        "scripting"
+    ],
+    "options_page": "settings/settings.html",
+    "host_permissions": ["http://*/*", "https://*/*"],
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "action": {
+        "default_popup": "popup/popup.html"
+    },
+    "icons": {
+        "16": "./assets/icon16.png",
+        "48": "./assets/icon48.png",
+        "128": "./assets/icon128.png"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "services/*.js",
+                "scripts/*.js",
+                "popup/*.js",
+                "popup/*.css",
+                "settings/*.js",
+                "settings/*.css",
+                "node_modules/libsignal/dist/libsignal.js"
+            ],
+            "matches": ["<all_urls>"]
+        }
+    ]
+}

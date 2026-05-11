@@ -1,0 +1,361 @@
+:root {
+  --color-primary: #1A438F;
+  --color-accent: #FACB0C;
+  --color-alert: #CC1E2F;
+  --color-bg: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #64748B;
+  --color-border: #E2E8F0;
+  --color-dark-bg: #0F172A;
+  --color-dark-text: #F8FAFC;
+  --color-dark-subtext: #94A3B8;
+  --color-primary-tint: #EFF6FF;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: var(--color-bg);
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.settings-header {
+  background: var(--color-dark-bg);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 32px;
+  height: 64px;
+}
+
+.header-logo {
+  height: 36px;
+  width: auto;
+}
+
+.header-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-dark-subtext);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  padding-left: 16px;
+}
+
+/* ── Content wrapper ── */
+.settings-content {
+  max-width: 520px;
+  margin: 32px auto;
+  padding: 0 24px 48px;
+}
+
+/* ── Settings table ── */
+.settings-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  transition: opacity 0.2s;
+  overflow: hidden;
+}
+
+.settings-table.loaded {
+  opacity: 1;
+}
+
+.settings-table td {
+  padding: 14px 20px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.settings-table tr:last-child td {
+  border-bottom: none;
+}
+
+.settings-label {
+  width: 45%;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.settings-control {
+  width: 55%;
+  text-align: right;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, opacity 0.15s;
+  min-height: 36px;
+  white-space: nowrap;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  border-color: var(--color-primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #1e40af;
+  border-color: #1e40af;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--color-primary-tint);
+}
+
+.btn-danger {
+  background: var(--color-alert);
+  color: #FFFFFF;
+  border-color: var(--color-alert);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #b01626;
+  border-color: #b01626;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* child-mode-button — overrides injected inline styles from JS */
+#child-mode-button {
+  min-width: 110px;
+}
+
+/* ── WebSocket URL row ── */
+.url-input-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+#websocket-url {
+  flex: 1;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  transition: border-color 0.15s;
+}
+
+#websocket-url:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+#websocket-display {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── QR code section ── */
+#qr-code-container {
+  display: none;
+  text-align: center;
+  margin-top: 16px;
+  padding: 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+#qr-code-container.visible {
+  display: block;
+  opacity: 1;
+}
+
+.qr-label {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 16px;
+}
+
+#qr-code {
+  background: var(--color-surface);
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+  line-height: 0;
+  font-size: 0;
+}
+
+#qr-code-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: auto;
+  background: var(--color-surface);
+  padding: 4px;
+}
+
+/* ── PIN modal ── */
+#pin-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  z-index: 1000;
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-surface);
+  padding: 28px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+
+.modal-body {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+#windows-hello-section {
+  margin-bottom: 16px;
+}
+
+.modal-fallback {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.pin-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 16px;
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  margin: 8px 0 20px;
+  transition: border-color 0.15s;
+}
+
+.pin-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ── Child mode locked-row message ── */
+#child-mode-message td {
+  padding: 12px 20px !important;
+}
+
+.cm-locked {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+/* ── WebSocket status message (injected by JS) ── */
+#websocket-status-message {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+/* ── Highlight animation for URL input ── */
+.highlight-input {
+  animation: highlight-pulse 1s ease-in-out;
+  border-color: var(--color-primary) !important;
+}
+
+@keyframes highlight-pulse {
+  0%   { box-shadow: 0 0 0 rgba(26, 67, 143, 0); }
+  50%  { box-shadow: 0 0 0 3px rgba(250, 203, 12, 0.5); }
+  100% { box-shadow: 0 0 0 2px var(--color-accent); }
+}
+
+/* ── pair-app-row border fix ── */
+.pair-app-row {
+  border-bottom: none !important;
+}
+
+.qr-row td {
+  padding-top: 0 !important;
+}

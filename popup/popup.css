@@ -1,0 +1,211 @@
+:root {
+  --color-primary: #1A438F;
+  --color-accent: #FACB0C;
+  --color-alert: #CC1E2F;
+  --color-bg: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #64748B;
+  --color-border: #E2E8F0;
+  --color-dark-bg: #0F172A;
+  --color-dark-subtext: #94A3B8;
+  --color-primary-tint: #EFF6FF;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  width: 340px;
+}
+
+/* ── Header ── */
+.popup-header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  height: 30px;
+}
+
+.logo {
+  height: 100%;
+  width: auto;
+}
+
+.settings-btn {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.settings-btn:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-tint);
+}
+
+.settings-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ── Consent table ── */
+.popup-main {
+  background: var(--color-surface);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 10px 16px;
+  text-align: left;
+  border: none;
+  vertical-align: middle;
+}
+
+tr {
+  border-bottom: 1px solid var(--color-border);
+}
+
+tr:last-child {
+  border-bottom: none;
+}
+
+td:first-child {
+  font-size: 14px;
+  color: var(--color-text-primary);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* ── Action buttons cell ── */
+.actionButtons {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  align-items: center;
+  width: 80px;
+  padding-left: 8px;
+  padding-right: 16px;
+}
+
+.consentButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.consentButton:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.consentButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.consentButton.selected-approve {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #FFFFFF;
+}
+
+.consentButton.selected-reject {
+  background: var(--color-alert);
+  border-color: var(--color-alert);
+  color: #FFFFFF;
+}
+
+.consentButton svg {
+  display: block;
+}
+
+/* ── Empty / error / child-mode states ── */
+.state-cell {
+  text-align: center !important;
+  padding: 24px 16px !important;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.child-mode-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+  color: var(--color-primary);
+}
+
+.child-mode-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 6px;
+}
+
+.child-mode-desc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* ── Footer ── */
+.popup-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  border-top: 1px solid var(--color-border);
+  min-height: 36px;
+  background: var(--color-bg);
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}

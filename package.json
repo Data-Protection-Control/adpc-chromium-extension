@@ -1,0 +1,14 @@
+{
+    "name": "adpc-chrome-ext",
+    "version": "0.1",
+    "description": "Chrome extension for Advanced Data Protection Control (ADPC) with mobile app pairing",
+    "type": "module",
+    "scripts": {
+      "build": "echo \"Add your build script here\" && exit 0",
+      "dev": "echo \"Add your development script here\" && exit 0"
+    },
+    "dependencies": {
+      "qrcode": "^1.5.3"
+    },
+    "devDependencies": {}
+  }

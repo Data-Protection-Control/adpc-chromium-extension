@@ -2,7 +2,7 @@
 
 ## Overview
 
-The ADPC Chromium Extension is a browser-based implementation of the [Advanced Data Protection Control (ADPC)](https://www.dataprotectioncontrol.org/) protocol. It enables users to manage their privacy preferences across websites by processing ADPC headers, displaying consent requests in a user-friendly popup, and communicating decisions back to web servers via HTTP headers.
+The ADPC Chromium Extension is a browser-based implementation of the [Advanced Data Protection Control (ADPC)](https://www.dataprotectioncontrol.org/). It enables users to manage their privacy preferences across websites by processing ADPC headers, displaying consent requests in a user-friendly popup, and communicating decisions back to web servers via HTTP headers.
 
 ## Key Features
 

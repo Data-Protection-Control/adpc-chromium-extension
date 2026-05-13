@@ -11,18 +11,6 @@ The ADPC Chromium Extension is a browser-based implementation of the Advanced Da
 - **Child Mode**: Fully delegates consent decisions to a paired parent device — requires a compatible connected device (see note below)
 - **Persistent Storage**: Maintains decisions across browsing sessions using local storage
 
-## Screenshots
-
-### Popup Interface
-| With Consent Requests | Child Mode Active | No Consent Requests |
-|:-------------------:|:---------------------:|:-----------------:|
-| ![Popup with requests](assets/screenshots/popup_with_requests.png) | ![Popup in child mode](assets/screenshots/popup_child_,mode.png) | ![Popup with no requests](assets/screenshots/popup_no_requests.png) |
-
-### Settings Interface
-| Pairing Screen | Successfully Paired | Disable Child Mode |
-|:----------------:|:-------------------:|:-----------------:|
-| ![Settings with pairing](assets/screenshots/settiggs_with_pairing.png) | ![Settings paired](assets/screenshots/settings_paired.png) | ![Disable child mode](assets/screenshots/disable_child_mode.png) |
-
 ## Installation
 
 1. Clone the repository:
@@ -76,3 +64,19 @@ The extension follows a modular architecture with a background service worker co
 - [ADPC GitHub Organization](https://github.com/Data-Protection-Control)
 - [ADPC Mobile App](https://github.com/Data-Protection-Control/ADPC-Mobile-App)
 - [ADPC Protocol Specification](https://github.com/Data-Protection-Control/ADPC)
+
+---
+
+## Screenshots
+
+### Popup Interface
+
+| With Consent Requests | Child Mode Active | No Consent Requests |
+|:---:|:---:|:---:|
+| <img src="assets/screenshots/popupwithrequests.png" width="280"> | <img src="assets/screenshots/childmode_active.png" width="280"> | <img src="assets/screenshots/norequests.png" width="280"> |
+
+### Settings Interface
+
+| Pairing Screen | Successfully Paired | Child Mode Active |
+|:---:|:---:|:---:|
+| <img src="assets/screenshots/pairingqr.png" width="380"> | <img src="assets/screenshots/apppaired.png" width="380"> | <img src="assets/screenshots/childmodeactive_settings.png" width="380"> |

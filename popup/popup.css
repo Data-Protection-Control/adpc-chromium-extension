@@ -1,3 +1,4 @@
+/* ── Design tokens ── */
 :root {
   --color-primary: #1A438F;
   --color-accent: #FACB0C;
@@ -8,8 +9,33 @@
   --color-text-secondary: #64748B;
   --color-border: #E2E8F0;
   --color-dark-bg: #0F172A;
+  --color-dark-text: #F8FAFC;
   --color-dark-subtext: #94A3B8;
+  --color-dark-border: rgba(255, 255, 255, 0.08);
   --color-primary-tint: #EFF6FF;
+}
+
+/* ── Dark theme ── */
+:root[data-theme="dark"] {
+  --color-bg: #0F172A;
+  --color-surface: #1E293B;
+  --color-text-primary: #F8FAFC;
+  --color-text-secondary: #94A3B8;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-dark-bg: #020617;
+  --color-primary-tint: rgba(26, 67, 143, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] {
+    --color-bg: #0F172A;
+    --color-surface: #1E293B;
+    --color-text-primary: #F8FAFC;
+    --color-text-secondary: #94A3B8;
+    --color-border: rgba(255, 255, 255, 0.08);
+    --color-dark-bg: #020617;
+    --color-primary-tint: rgba(26, 67, 143, 0.3);
+  }
 }
 
 * {
@@ -20,7 +46,7 @@
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--color-text-primary);
   background: var(--color-surface);
   width: 340px;
@@ -30,7 +56,7 @@ body {
 .popup-header {
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
-  height: 52px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -40,7 +66,7 @@ body {
 .logo-wrap {
   display: flex;
   align-items: center;
-  height: 30px;
+  height: 28px;
 }
 
 .logo {
@@ -56,8 +82,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border-radius: 4px;
   transition: color 0.15s, background 0.15s;
   flex-shrink: 0;
@@ -84,7 +110,7 @@ table {
 }
 
 td {
-  padding: 10px 16px;
+  padding: 8px 16px;
   text-align: left;
   border: none;
   vertical-align: middle;
@@ -108,17 +134,16 @@ td:first-child {
 /* ── Action buttons cell ── */
 .actionButtons {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   justify-content: flex-end;
   align-items: center;
-  width: 80px;
   padding-left: 8px;
   padding-right: 16px;
 }
 
 .consentButton {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -173,14 +198,14 @@ td:first-child {
 }
 
 .child-mode-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--color-primary);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .child-mode-desc {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--color-text-secondary);
   line-height: 1.5;
 }
@@ -199,9 +224,13 @@ td:first-child {
 .status-item {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   font-size: 12px;
   color: var(--color-text-secondary);
+}
+
+.status-item.status-active {
+  color: var(--color-primary);
 }
 
 .icon {

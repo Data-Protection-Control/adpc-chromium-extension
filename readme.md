@@ -15,7 +15,7 @@ The ADPC Chromium Extension is a browser-based implementation of the [Advanced D
 
 1. Clone the repository:
    ```
-   git clone https://github.com/Data-Protection-Control/ADPC-Kids-Browser-Extension.git
+   git clone https://github.com/Data-Protection-Control/adpc-chromium-extension
    ```
 2. Open your Chromium-based browser and navigate to `chrome://extensions/`
 3. Enable "Developer mode" in the top-right corner
@@ -62,7 +62,6 @@ The extension follows a modular architecture with a background service worker co
 ## Related Projects
 
 - [ADPC GitHub Organization](https://github.com/Data-Protection-Control)
-- [ADPC Mobile App](https://github.com/Data-Protection-Control/ADPC-Mobile-App)
 - [ADPC Protocol Specification](https://github.com/Data-Protection-Control/ADPC)
 
 ---

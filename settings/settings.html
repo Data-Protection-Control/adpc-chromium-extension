@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="system">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ADPC — Settings</title>
+  <script src="../scripts/theme.js"></script>
   <script src="../scripts/qrcode.min.js" defer></script>
   <script src="settings.js" defer></script>
   <link rel="stylesheet" href="settings.css">
@@ -11,8 +12,10 @@
 <body>
 
   <header class="settings-header">
-    <img src="../assets/adpc_logo_high.png" alt="ADPC" class="header-logo">
-    <span class="header-label">Settings</span>
+    <div class="header-inner">
+      <img src="../assets/adpc_logo_high.png" alt="ADPC" class="header-logo">
+      <span class="header-label">Settings</span>
+    </div>
   </header>
 
   <div class="settings-content" id="settings-content">
@@ -56,6 +59,18 @@
         <td class="settings-label">Local Data</td>
         <td class="settings-control">
           <button id="clear-all" class="btn btn-danger">Clear</button>
+        </td>
+      </tr>
+
+      <!-- Theme -->
+      <tr>
+        <td class="settings-label">Theme</td>
+        <td class="settings-control">
+          <div class="theme-toggle" id="theme-toggle">
+            <button class="theme-btn" data-theme-val="light">Light</button>
+            <button class="theme-btn active" data-theme-val="system">System</button>
+            <button class="theme-btn" data-theme-val="dark">Dark</button>
+          </div>
         </td>
       </tr>
 

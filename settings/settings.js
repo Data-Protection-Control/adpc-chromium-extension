@@ -5,11 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 1. Helper Functions
   async function isWindowsHelloSupported() {
     try {
-      const isWindows = navigator.platform.indexOf('Win') > -1;
-      if (!isWindows) return false;
-
-      const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-      return available;
+      return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
     } catch (error) {
       return false;
     }
@@ -100,7 +96,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     saveWebsocketUrlButton: document.getElementById("save-websocket-url"),
     editWebsocketUrlButton: document.getElementById("edit-websocket-url"),
     websocketDisplay: document.getElementById("websocket-display"),
-    websocketEdit: document.getElementById("websocket-edit")
+    websocketEdit: document.getElementById("websocket-edit"),
+    themeToggle: document.getElementById("theme-toggle")
   };
 
   // 3. State Management
@@ -110,22 +107,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     websocketUrl: null,
     isHelloSupported: false,
     pairedAppId: null,
+    themePreference: 'system',
 
     async initialize() {
       console.log("[Settings] Initializing state");
-      
+
       // Load all state at once
-      const stored = await new Promise(resolve => 
-        chrome.storage.local.get(['childMode', 'isPaired', 'pairedAppId', 'websocketUrl'], resolve)
+      const stored = await new Promise(resolve =>
+        chrome.storage.local.get(['childMode', 'isPaired', 'pairedAppId', 'websocketUrl', 'themePreference'], resolve)
       );
       
       console.log("[Settings] Loaded initial state from storage:", stored);
       
       // Set default values if not in storage
-      this.childMode = stored.childMode === true; // Ensure boolean
-      this.isPaired = stored.isPaired === true; // Ensure boolean
+      this.childMode = stored.childMode === true;
+      this.isPaired = stored.isPaired === true;
       this.pairedAppId = stored.pairedAppId || null;
       this.websocketUrl = stored.websocketUrl || null;
+      this.themePreference = stored.themePreference || 'system';
       
       // If no WebSocket URL is set, ensure isPaired is false
       if (!this.websocketUrl) {
@@ -150,15 +149,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (changes.pairedAppId !== undefined) this.pairedAppId = changes.pairedAppId.newValue || null;
       if (changes.websocketUrl !== undefined) {
         this.websocketUrl = changes.websocketUrl.newValue || null;
-        
+
         // If WebSocket URL is cleared, ensure isPaired is false
         if (!this.websocketUrl) {
           this.isPaired = false;
         }
       }
-      
+
+      if (changes.themePreference !== undefined) {
+        this.themePreference = changes.themePreference.newValue || 'system';
+      }
+
       console.log(`[Settings] Updated state: childMode=${this.childMode}, isPaired=${this.isPaired}, pairedAppId=${this.pairedAppId || 'none'}, websocketUrl=${this.websocketUrl || 'none'}`);
-      
+
       this.isHelloSupported = await isWindowsHelloSupported();
     }
   };
@@ -190,17 +193,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         childModeButton.style.backgroundColor = "";
         childModeButton.style.borderColor = "";
         childModeButton.className = 'btn btn-primary';
-        childModeButton.innerHTML = "Enter WebSocket URL first";
+        childModeButton.innerHTML = "Pair App";
         return;
       }
 
       // Then check if device is paired
       if (!isPaired) {
-        childModeButton.disabled = true;
+        childModeButton.disabled = false;
         childModeButton.style.backgroundColor = "";
         childModeButton.style.borderColor = "";
         childModeButton.className = 'btn btn-primary';
-        childModeButton.innerHTML = "Pair device first";
+        childModeButton.innerHTML = "Pair App";
         return;
       }
 
@@ -291,7 +294,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!websocketUrl) {
         console.log("[Settings] WebSocket URL not set, disabling pair button");
         pairStatus.textContent = "Pair App";
-        pairAppButton.textContent = "Enter WebSocket URL first";
+        pairAppButton.textContent = "Enter WebSocket URL";
         pairAppButton.disabled = true;
         pairAppButton.style.display = "inline-flex";
         unpairAppButton.style.display = "none";
@@ -309,17 +312,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       unpairAppButton.style.display = isPaired ? "inline-block" : "none";
     },
 
+    updateThemeButtons() {
+      const pref = state.themePreference || 'system';
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.themeVal === pref);
+      });
+    },
+
     updateAll() {
       console.log("[Settings] Updating all UI elements");
       
-      // Ensure state consistency
-      if (!state.websocketUrl) {
-        // If WebSocket URL is not set, ensure isPaired is false
-        if (state.isPaired) {
-          console.warn("[Settings] Inconsistent state: isPaired=true but websocketUrl not set. Correcting.");
-          state.isPaired = false;
-          chrome.storage.local.set({ isPaired: false });
-        }
+      // Ensure state consistency: can't be paired without a server URL
+      if (!state.websocketUrl && state.isPaired) {
+        state.isPaired = false;
+        chrome.storage.local.set({ isPaired: false });
       }
       
       // First update the WebSocket URL display
@@ -340,32 +346,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Finally update child mode button which depends on pairing status
       this.updateChildModeButton();
       
+      this.updateThemeButtons();
       elements.settingsTable.classList.add('loaded');
     }
   };
 
   // Function to check WebSocket connection status
   async function checkWebSocketStatus() {
-    console.log("[Settings] Checking WebSocket connection status");
-    
     return new Promise(resolve => {
       chrome.runtime.sendMessage({ type: "checkWebSocketStatus" }, response => {
-        console.log("[Settings] WebSocket status check response:", response);
-        
-        if (response?.connected) {
-          console.log("[Settings] WebSocket is connected");
-        } else {
-          console.warn("[Settings] WebSocket is not connected");
-          
-          // If WebSocket is not connected but isPaired is true, update state
-          if (state.isPaired && !response?.connected) {
-            console.warn("[Settings] Inconsistent state: isPaired=true but WebSocket not connected. Correcting.");
-            state.isPaired = false;
-            chrome.storage.local.set({ isPaired: false });
-            ui.updateAll();
-          }
-        }
-        
+        if (chrome.runtime.lastError) { resolve(false); return; }
         resolve(response?.connected || false);
       });
     });
@@ -457,6 +447,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       return true;
     });
 
+    elements.themeToggle.addEventListener('click', (e) => {
+      const btn = e.target.closest('.theme-btn');
+      if (!btn) return;
+      const pref = btn.dataset.themeVal;
+      state.themePreference = pref;
+      chrome.storage.local.set({ themePreference: pref });
+      ui.updateThemeButtons();
+    });
+
     elements.editWebsocketUrlButton.addEventListener("click", () => {
       elements.websocketDisplay.style.display = "none";
       elements.websocketEdit.style.display = "flex";
@@ -485,23 +484,26 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!statusMessage) {
         statusMessage = document.createElement("div");
         statusMessage.id = "websocket-status-message";
-        statusMessage.style.marginTop = "10px";
-        statusMessage.style.padding = "8px";
-        statusMessage.style.borderRadius = "4px";
-        statusMessage.style.fontSize = "14px";
         elements.websocketEdit.appendChild(statusMessage);
       }
-      
+
       // Update status message
+      statusMessage.style.display = "";
+      statusMessage.className = "ws-status ws-status--pending";
       statusMessage.textContent = "Connecting to WebSocket server...";
-      statusMessage.style.backgroundColor = "#f8f9fa";
-      statusMessage.style.color = "#666";
       
       chrome.storage.local.set({ websocketUrl: url }, () => {
-        chrome.runtime.sendMessage({ 
-          type: "updateWebsocketUrl", 
-          url: url 
+        chrome.runtime.sendMessage({
+          type: "updateWebsocketUrl",
+          url: url
         }, (response) => {
+          if (chrome.runtime.lastError) {
+            saveButton.disabled = false;
+            saveButton.textContent = "Save";
+            statusMessage.className = "ws-status ws-status--error";
+            statusMessage.textContent = `❌ ${chrome.runtime.lastError.message}`;
+            return;
+          }
           // Re-enable the button
           saveButton.disabled = false;
           saveButton.textContent = "Save";
@@ -509,25 +511,18 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (response?.success) {
             console.log("[Settings] WebSocket connection successful");
             updateWebsocketUrlDisplay(url);
-            
-            // Show success message
+
+            statusMessage.className = "ws-status ws-status--success";
             statusMessage.textContent = "✅ Connected successfully!";
-            statusMessage.style.backgroundColor = "#d4edda";
-            statusMessage.style.color = "#155724";
-            
-            // Hide the status message after 3 seconds
+
             setTimeout(() => {
               statusMessage.style.display = "none";
             }, 3000);
           } else {
             console.error("[Settings] WebSocket connection failed:", response?.error);
-            
-            // Show error message
+
+            statusMessage.className = "ws-status ws-status--error";
             statusMessage.textContent = `❌ ${response?.error || "Failed to connect. Please check the URL and try again."}`;
-            statusMessage.style.backgroundColor = "#f8d7da";
-            statusMessage.style.color = "#721c24";
-            
-            // Keep the error message visible
           }
         });
       });
@@ -584,7 +579,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               if (created) {
                 await toggleChildMode(true);
               } else {
-                alert("Failed to set up Windows Hello. Please try again.");
+                alert("Failed to set up device authentication. Please try again.");
               }
             } else {
               elements.pinModal.style.display = "block";
@@ -592,7 +587,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               elements.confirmPinButton.setAttribute("data-action", "enable");
             }
           } else {
-            alert("You must pair with a phone before enabling Child Mode.");
+            showPairingQR();
           }
         });
       } catch (error) {
@@ -637,32 +632,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       elements.pinInput.value = "";
     });
 
-    elements.pairAppButton.addEventListener("click", () => {
-      // Check if button is disabled or WebSocket URL is not set
-      if (elements.pairAppButton.disabled || !state.websocketUrl) {
-        console.log("[Settings] Pair button clicked but disabled or WebSocket URL not set");
-        
-        // If WebSocket URL is not set, focus on the WebSocket URL input
-        if (!state.websocketUrl) {
-          elements.websocketUrlInput.focus();
-          
-          // Add a visual indicator to the WebSocket URL input
-          elements.websocketUrlInput.classList.add('highlight-input');
-          setTimeout(() => {
-            elements.websocketUrlInput.classList.remove('highlight-input');
-          }, 2000);
-        }
-        
-        return;
-      }
-      
-      console.log("[Settings] Generating setup key for pairing");
+    function showPairingQR() {
       chrome.runtime.sendMessage({ type: "generateSetupKey" }, (response) => {
+        if (chrome.runtime.lastError) { alert("Failed to generate the setup key. Please try again."); return; }
         if (response?.success) {
-          // Clear any existing QR code
           elements.qrCodeDiv.innerHTML = "";
-          
-          // Generate new QR code
           new QRCode(elements.qrCodeDiv, {
             text: response.qrContent,
             width: 300,
@@ -671,26 +645,37 @@ document.addEventListener("DOMContentLoaded", async () => {
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.H
           });
-          
-          // Add logo
           const logo = document.createElement('img');
           logo.id = 'qr-code-logo';
           logo.src = '../assets/adpc_logo_high.png';
           logo.alt = 'ADPC Logo';
           elements.qrCodeDiv.appendChild(logo);
-          
-          // Show QR code container
           elements.qrCodeContainer.style.display = "block";
-          elements.qrCodeContainer.offsetHeight; // Trigger reflow
+          elements.qrCodeContainer.offsetHeight;
           elements.qrCodeContainer.classList.add('visible');
         } else {
           alert("Failed to generate the setup key. Please try again.");
         }
       });
+    }
+
+    elements.pairAppButton.addEventListener("click", () => {
+      if (elements.pairAppButton.disabled || !state.websocketUrl) {
+        if (!state.websocketUrl) {
+          elements.websocketUrlInput.focus();
+          elements.websocketUrlInput.classList.add('highlight-input');
+          setTimeout(() => {
+            elements.websocketUrlInput.classList.remove('highlight-input');
+          }, 2000);
+        }
+        return;
+      }
+      showPairingQR();
     });
 
     elements.unpairAppButton.addEventListener("click", () => {
       chrome.runtime.sendMessage({ type: "unpairApp" }, (response) => {
+        if (chrome.runtime.lastError) { return; }
         if (response?.status === "success") {
           // Update state and UI immediately
           state.isPaired = false;

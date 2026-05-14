@@ -1,7 +1,7 @@
-const SVG_SMARTPHONE = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>`;
-const SVG_CHECK = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
-const SVG_X = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
-const SVG_CHECK_CIRCLE = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+const SVG_SMARTPHONE = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>`;
+const SVG_CHECK = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+const SVG_X = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+const SVG_CHECK_CIRCLE = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
 const SVG_USERS_LG = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -61,16 +61,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Function to update just the pairing status UI elements
   function updatePairingStatusUI(isPaired) {
+    pairingIcon.innerHTML = SVG_SMARTPHONE;
     if (isPaired) {
       pairingStatus.textContent = "Paired with app";
-      pairingStatus.style.color = "#1A438F";
-      pairingIcon.style.color = "#1A438F";
-      pairingIcon.innerHTML = SVG_SMARTPHONE;
+      pairingStatusContainer.classList.add('status-active');
     } else {
       pairingStatus.textContent = "Not paired";
-      pairingStatus.style.color = "";
-      pairingIcon.style.color = "";
-      pairingIcon.innerHTML = SVG_SMARTPHONE;
+      pairingStatusContainer.classList.remove('status-active');
     }
   }
 
@@ -162,12 +159,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       
       statusContainer.style.display = 'flex';
+      statusContainer.classList.add('status-active');
       saveStatus.textContent = message;
-      saveStatus.style.color = "#1A438F";
-      statusContainer.style.color = "#1A438F";
       const statusIcon = document.getElementById("save-icon");
       statusIcon.innerHTML = SVG_CHECK_CIRCLE;
-      statusIcon.style.color = "#1A438F";
     });
   }
 

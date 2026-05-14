@@ -166,11 +166,7 @@ class ChildModeService {
      */
     async isWindowsHelloSupported() {
         try {
-            const isWindows = navigator.platform.indexOf('Win') > -1;
-            if (!isWindows) return false;
-
-            const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-            return available;
+            return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
         } catch (error) {
             return false;
         }
